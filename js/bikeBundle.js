@@ -12,14 +12,61 @@ BikeBundle.prototype.getBikeYear = function(timestamp) {
 BikeBundle.prototype.compareColors = function(city, colors) {
   var responseString = "<h3>In " + city + " there are: </h3>";
   var done = colors.length;
+  var bikesByColor = {};
 
   $(colors).each(function() {
     var color = this;
     $.get("https://bikeindex.org:443/api/v2/bikes_search/count?colors=" + color +  "&proximity=" + city + "&proximity_square=100&access_token=date_stolen").then(function(response) {
       responseString += "<li class='list-group-item'>" + response.proximity + " stolen " + color + " bikes </li>";
+      bikesByColor[color.trim()] = response.proximity;
       done -= 1;
       if(done === 0){
-        $('#output').prepend(responseString);
+        // $('#output').prepend(responseString);
+
+        var colorNames = Object.keys(bikesByColor);
+        var nums = [];
+        for (var i = 0; i < colorNames.length; i++) {
+          nums.push(bikesByColor[colorNames[i]]);
+        }
+
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: colorNames,
+                datasets: [{
+                    label: '# of Bikes Stolen',
+                    data: nums,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
       }
     }).fail(function(error) {
         $('#output').prepend(error.responseJSON.message);

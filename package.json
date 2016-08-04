@@ -12,6 +12,7 @@
     "bower-files": "^3.13.3",
     "browser-sync": "^2.14.0",
     "browserify": "^13.1.0",
+    "chart.js": "^2.2.1",
     "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",

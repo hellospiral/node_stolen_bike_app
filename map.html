@@ -22,18 +22,15 @@
 
       var map;
       function initMap() {
-        var bike1 = {lat: 45.5051028, lng: -122.6357722};
-        var bike2 = {lat: 45.494017, lng: -122.6563635};
 
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 45.5231, lng: -122.6765},
-          zoom: 10
+          zoom: 12
         });
 
         var bikeIds = []
-        var bikeVars = []
 
-        $.get('https://bikeindex.org:443/api/v2/bikes_search/stolen?page=1&proximity=Portland%2C%20OR&proximity_square=100').then(function(response) {
+        $.get('https://bikeindex.org:443/api/v2/bikes_search/stolen?page=1&per_page=65&proximity=Portland%2C%20OR&proximity_square=100').then(function(response) {
           for (var i = 0; i < response.bikes.length; i++) {
             bikeIds.push(response.bikes[i].id);
           }
